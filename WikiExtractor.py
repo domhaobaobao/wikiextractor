@@ -521,11 +521,7 @@ class Extractor(object):
             header = '<doc id="%s" revid="%s" url="%s" title="%s">\n' % (self.id, self.revid, url, self.title)
         else:
             header = '<doc id="%s" url="%s" title="%s">\n' % (self.id, url, self.title)
-        # Separate header from text with a newline.
-        if self.toHTML:
-            header += '<h1>' + self.title + '</h1>\n'
-        else:
-            header += self.title + '\n\n'
+
         # https://www.mediawiki.org/wiki/Help:Magic_words
         self.magicWords['PAGENAME'] = self.title
         self.magicWords['FULLPAGENAME'] = self.title
@@ -543,11 +539,12 @@ class Extractor(object):
         # $dom = $this->preprocessToDom( $text, $flag );
         # $text = $frame->expand( $dom );
         #
+        text = text[:text.find("==")]
         text = self.transform(text)
         text = self.wiki2text(text)
 
         text = compact(self.clean(text))
-        footer = "\n</doc>\n"
+        footer = "</doc>\n"
         if sum(len(line) for line in text) < Extractor.min_text_length:
             return
         if out == sys.stdout:   # option -a or -o -
