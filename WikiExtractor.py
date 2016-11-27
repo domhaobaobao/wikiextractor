@@ -2698,9 +2698,9 @@ def process_dump(input_file, template_file, out_file, file_size, file_compress,
     global moduleNamespace, modulePrefix
 
     if input_file == '-':
-        input = sys.stdin
+        input = os.fdopen(0, 'rb') ##sys.stdin
     else:
-        input = fileinput.FileInput(input_file, openhook=fileinput.hook_compressed)
+        input = fileinput.FileInput(input_file, mode= "rb", openhook=fileinput.hook_compressed)
 
     # collect siteinfo
     for line in input:
